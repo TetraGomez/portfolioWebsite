@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sophie&#39;s Portfolio Blog</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Sophie&#39;s Portfolio Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 Aug 2024 18:16:49 -0700</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Implementing the Grid</title>
+      <link>http://localhost:1313/posts/implementing-the-grid/</link>
+      <pubDate>Sun, 25 Aug 2024 18:16:49 -0700</pubDate>
+      <guid>http://localhost:1313/posts/implementing-the-grid/</guid>
+      <description>Memory is Real In a theoretically pure version of Conway&amp;rsquo;s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is fine. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?&#xA;Static Array The first and simplest way of doing this is to simply not.</description>
+    </item>
+    <item>
+      <title>New Project: Conway&#39;s Game of Life</title>
+      <link>http://localhost:1313/posts/project-concept/</link>
+      <pubDate>Sun, 25 Aug 2024 17:21:50 -0700</pubDate>
+      <guid>http://localhost:1313/posts/project-concept/</guid>
+      <description>Beginning with First Concepts Conway&amp;rsquo;s game of life is a well known cellular automation which takes place on a lattice grid. The rules for generating each step of the simulation are the following:&#xA;Any live cell with fewer than two live neighbours dies, as if by underpopulation. Any live cell with two or three live neighbours lives on to the next generation. Any live cell with more than three live neighbours dies, as if by overpopulation.</description>
+    </item>
+  </channel>
+</rss>

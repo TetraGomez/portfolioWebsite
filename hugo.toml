@@ -1,0 +1,4 @@
+baseURL = 'https://sophiesportfolioblog.org/'
+languageCode = 'en-us'
+title = "Sophie's Portfolio Blog"
+theme = 'ananke'

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Implementing the Grid | Sophie&#39;s Portfolio Blog</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="Memory is Real In a theoretically pure version of Conway&rsquo;s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is fine. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?
+Static Array The first and simplest way of doing this is to simply not.">
+    <meta name="generator" content="Hugo 0.133.0">
+    
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+    
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/implementing-the-grid/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/posts/implementing-the-grid/">
+  <meta property="og:site_name" content="Sophie&#39;s Portfolio Blog">
+  <meta property="og:title" content="Implementing the Grid">
+  <meta property="og:description" content="Memory is Real In a theoretically pure version of Conway’s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is fine. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?
+Static Array The first and simplest way of doing this is to simply not.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-08-25T18:16:49-07:00">
+    <meta property="article:modified_time" content="2024-08-25T18:16:49-07:00">
+
+  <meta itemprop="name" content="Implementing the Grid">
+  <meta itemprop="description" content="Memory is Real In a theoretically pure version of Conway’s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is fine. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?
+Static Array The first and simplest way of doing this is to simply not.">
+  <meta itemprop="datePublished" content="2024-08-25T18:16:49-07:00">
+  <meta itemprop="dateModified" content="2024-08-25T18:16:49-07:00">
+  <meta itemprop="wordCount" content="1027">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Implementing the Grid">
+  <meta name="twitter:description" content="Memory is Real In a theoretically pure version of Conway’s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is fine. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?
+Static Array The first and simplest way of doing this is to simply not.">
+
+	
+  </head>
+
+  <body class="ma0 avenir bg-near-white">
+
+    
+   
+  
+
+  
+  <header class="cover bg-top" style="background-image: url('http://localhost:1313/images/conway.jpg');">
+    <div class="bg-black-60">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l justify-between items-center center">
+    <a href="/" class="f3 fw2 hover-white no-underline white-90 dib">
+      
+        Sophie&#39;s Portfolio Blog
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      
+<div class="ananke-socials">
+  
+</div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv6 ph3 ph4-ns">
+        
+          <div class="f2 f1-l fw2 white-90 mb0 lh-title">Implementing the Grid</div>
+          
+        
+      </div>
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  <article class="flex-l flex-wrap justify-between mw8 center ph3">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Sophie&#39;s Porfolio Blog
+      </aside>
+      
+
+
+
+
+
+
+
+
+
+
+  <div id="sharing" class="mt3 ananke-socials">
+    
+  </div>
+
+
+      <h1 class="f1 athelas mt3 mb1">Implementing the Grid</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2024-08-25T18:16:49-07:00">August 25, 2024</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="memory-is-real">Memory is Real</h2>
+<p>In a theoretically pure version of Conway&rsquo;s Game of Life, the grid extends towards infinity in all directions. In cushy math world, this is <a href="https://en.wikipedia.org/wiki/Infinite_set">fine</a>. In implementing such an idea in a computer though, we are presented with an engineering problem. How does one create an infinite space with only a finite amount of memory to store it in?</p>
+<h3 id="static-array">Static Array</h3>
+<p>The first and simplest way of doing this is to simply not. We can create a two-dimensional static array of cells, all instances of a Cell class. Each cell keeps a list of eight neighbors which are directly adjacent to it. To update the simulation we iterate over the whole array having each cell check its neighbors and decide whether it should be on or off in the next step, then iterate over the array again to update all of the cells. Cells on the edge of the array which have less than eight neighbors simply treat the non-existent neighbors as being off for puposes of counting surrounding cells which are on. Cells which would attempt to appear outside of the array are ignored.</p>
+<p>This, suprisingly, is the solution on this <a href="https://conwaylife.com/">popular site</a> which offers a JS implementation of the game. I find this solution deeply unsatisfying and not much of a solution of all. We can do better.</p>
+<h3 id="toroidal-static-array">Toroidal Static Array</h3>
+<p>This approach is very similar to the last, except that instead of disregarding the edges of the array, we skirt around them by cleverly assigning the neighbors of cells on the edges. We will assign neighbors to each cell as normal, except the edge cells will wrap around to the other side of the array. This way we have an effectively infinite amout of space.</p>
+<p><img src="/toroidal.gif" alt=""></p>
+<p>This approach works for a simple implementation, but has some issues with being equivalent to the infinite grid. As a basic example: since a moving structure can loop around, it could interact again with static structures in a way that it wouldn&rsquo;t on the infinite grid. For this project, I decided that this approach was not satisfactory.</p>
+<h3 id="dynamic-array-allocation">Dynamic Array Allocation</h3>
+<p>My next idea was to dynamically allocate cells in ArrayLists representing the quadrants on the cartesian plane as the size of the simulation grew larger. This way, the grid would grow from the center, and cells could be inserted at amortized <em>O(1)</em> time.</p>
+<p>I used an enum here, Quadrant, to handle how each quadrant&rsquo;s coordinates were assigned. With four relative arrays, the cells needed some way to know what quadrant they were located in. The <em>getXParity()</em> and <em>getYParity()</em> methods in quadrant both give relative parities of the cartesian quadrants, which is multiplied with the cell location to draw the cells within the quadrants they belong to.</p>
+<p><img src="/dynamic.png" alt=""></p>
+<p>The plan with this solution was to grow the array only when an on cell came close to the edge of the current array in memory. This plan was flawed however. Before the simulation was even implemented I attempted to initialize the array with large values for <em>INIT_AMOUNT</em> to check for any issues. I found that not only did heap run out of memory at a relatively small value, panning the view around became worse and worse. Whenever the view was panned with a large amount of cells, the quadrants would &ldquo;detach&rdquo; from each other probably due to some multithreading desync. I attempted to limit the number of cells being drawn at once but the performance was still terrible. This idea was just <strong>not scaleable</strong> at <em>O(n²)</em> memory complexity. So what is?</p>
+<h3 id="hash-registry-and-relative-grid">Hash Registry and Relative Grid</h3>
+<p>Since I was using too much memory tracking all the cells, a more elegant solution would be something with a lot less memory complexity. I had another idea which I held off implementing to avoid premature optimization. Most of the cells which the previous solution stored in memory were not doing anything at all. Really, the only cells which mattered for each simulation step were those which were on and those which were adjacent to the ones which are on. Anything else can be safely assumed to be completely blank, and not necessary to store in memory.</p>
+<p>The current solution uses a cell registry, where every cell created is inserted into a hash table with the key being the cell&rsquo;s location on the grid. To check for a cell&rsquo;s neighbors, it is easy enough to access the HashTable at <em>O(1)</em> for each neighbor. This means that updating the cells only takes <em>O(n)</em> time and storing the cells takes only <em>O(n)</em> memory. Even better, <em>n</em> refers to the number of tracked cells rather than the dimensions of the whole array, which means that <em>n</em> will always be less than or equal to <em>n</em> in the previous solution.</p>
+<p><img src="/hash.png" alt=""></p>
+<p>The Direction enum is similar to the Quadrant enum in functionality, but baked a little differently due to the difference in approach. It deals with direction relative to a cell, not quadrants relative to each other.</p>
+<p>This does leave one issue though. The cells which are no longer in memory formed the grid before, so now there&rsquo;s no grid display. This fix was much easier than I expected.</p>
+<p><img src="/grid.png" alt=""></p>
+<p>By measuring the window size, it&rsquo;s easy enough to render a grid of squares that is the size of the window, which is flexible enough to work with any window size. Then in order to simulate motion, it can be moved relative to the offset that the tracked cells use to pan around. Applying modulo to the offset allows an infinite grid to be simulated very easily.</p>
+<h2 id="limitations">Limitations</h2>
+<p>So how infinite is it <em>really?</em> Well, the main limiting factor is the integer limit. Because the Java Graphics2D class only accepts integers, once either the pan offset or one of the cell coordinates surpasses the integer limit, there isn&rsquo;t really a way to draw more. Java does support arbitrarily large numbers through the BigInteger class but it doesn&rsquo;t seem worth it to find a graphics API which allows the use of this, as the integer limit is already ±2,147,483,647. Still, it would be good to make sure there is no crash in the case of a structure reaching the edge.</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href="http://localhost:1313/" >
+    &copy;  Sophie's Portfolio Blog 2024 
+  </a>
+    <div>
+<div class="ananke-socials">
+  
+</div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
